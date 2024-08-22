@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <header>   
+      <nav>
+      <li><a href="{% url "signup"%}">sign up</a></li>
+      <li><a href="{% url "login" %}">log in</a></li>
+      </nav>
+    </header>
+    <main>
+    {% block "content" %}
+    <h1>Welcome to my application of posts</h1>
+    {% lorem 1 b random %}
+    {% endblock "content" %}
+    </main>
+    <footer>
+      <ul>
+        <li>Integrante 1</li>
+        <li>Integrante 2</li>
+        <li>Integrante 3</li>
+      </ul>
+    </footer>
+
+  </body>
+</html>
