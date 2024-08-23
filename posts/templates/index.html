@@ -8,8 +8,15 @@
   <body>
     <header>   
       <nav>
-      <li><a href="{% url "signup"%}">sign up</a></li>
-      <li><a href="{% url "login" %}">log in</a></li>
+        {% if user.is_authenticated %} 
+          <li><a href="{% url "logout" %}">Cerrar sesión</a></li>
+        {% else %}
+          <li><a href="{% url "signup"%}">Crear cuenta</a></li>
+          <li><a href="{% url "login" %}">Iniciar sesión</a></li>
+        {% endif %}
+
+
+
       </nav>
     </header>
     <main>
