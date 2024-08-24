@@ -1,3 +1,9 @@
 {% extends "index.html" %} {% block "content" %}
 <h1>Login page</h1>
+{{error}}
+<form action="{% url "login" %}" method="POST">
+  {% csrf_token %}
+  {{form}}
+  <button type="submit">Iniciar sesión</button>
+</form>
 {% endblock "content" %}
