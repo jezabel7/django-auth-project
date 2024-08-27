@@ -3,6 +3,8 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.models import User  # Utilizamos el modelo integrado User
 from django.contrib.auth import login, authenticate, logout
+from .models import Task
+from .forms import TaskForm
 
 
 # Create your views here.
@@ -78,8 +80,33 @@ def delete_session(request):
 
 def home(request):
     if request.user.is_authenticated:
-        print("home")
-        users = User.objects.all()
-        print(users)
-        return render(request, "home.html")
+        tasks = Task.objects.all()  # Obtiene todas las tareas de la BD
+        return render(request, "home.html", {"tasks": tasks})
     return redirect("index")
+
+
+def create_task(request):
+    if request.user.is_authenticated:
+        if request.method == "GET":
+            return render(request, "create_task.html", {"form": TaskForm})
+        else:
+            try:
+                print(request.POST)
+                form = TaskForm(
+                    request.POST
+                )  # Crear el formulario con los datos enviados
+                if form.is_valid():
+                    nuevo_task = form.save(
+                        commit=False
+                    )  # Obtener los datos de ese form
+                    nuevo_task.user = request.user
+                    nuevo_task.save()
+                    return redirect("home")
+            except:
+                return render(
+                    request,
+                    "create_task.html",
+                    {"form": TaskForm, "error": "No se pudo crear la tarea"},
+                )
+
+    redirect("login")

@@ -1,3 +1,11 @@
 {% extends "index.html" %} {% block "content" %}
 <h1>Este es el home</h1>
-{% endblock "content" %}
+<h2>Tareas creadas</h2>
+<a href="/tasks/create/">Crear nueva tarea</a>
+{% for task in tasks %}
+<div>
+  <h4>{{task.title}}</h4>
+  <p>{{task.description}} - {{task.user.username}}</p>
+  <em>{{task.created}}</em>
+</div>
+{% endfor %} {% endblock "content" %}

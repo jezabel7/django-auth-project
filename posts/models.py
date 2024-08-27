@@ -8,7 +8,7 @@ class Task(models.Model):
     description = models.TextField(blank=True)
     created = models.DateTimeField(auto_now_add=True)
     important = models.BooleanField(default=False)
-    datecompleted = models.DateTimeField(null=True)
+    datecompleted = models.DateTimeField(null=True, blank=True)
     # relacionamos con el usuario | si en caso el usuario se borra, pues se borran sus tareas
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 

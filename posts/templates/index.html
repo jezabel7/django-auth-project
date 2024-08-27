@@ -14,17 +14,16 @@
           <li><a href="{% url "signup"%}">Crear cuenta</a></li>
           <li><a href="{% url "login" %}">Iniciar sesión</a></li>
         {% endif %}
-
-
-
       </nav>
     </header>
+    <hr></hr>
     <main>
     {% block "content" %}
     <h1>Welcome to my application of posts</h1>
     {% lorem 1 b random %}
     {% endblock "content" %}
     </main>
+    <hr></hr>
     <footer>
       <ul>
         <li>Integrante 1</li>
