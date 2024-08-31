@@ -1,10 +1,10 @@
 from django.http import HttpResponse
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.models import User  # Utilizamos el modelo integrado User
 from django.contrib.auth import login, authenticate, logout
-from .models import Task
-from .forms import TaskForm
+from .models import Task, Profile
+from .forms import TaskForm, ProfileForm
 
 
 # Create your views here.
@@ -110,3 +110,21 @@ def create_task(request):
                 )
 
     redirect("login")
+
+
+def profile(request):
+    user = request.user
+    profile = get_object_or_404(Profile, user=user)
+    return render(request, "profile.html", {"profile": profile})
+
+
+def edit_profile(request):
+    profile = get_object_or_404(Profile, user=request.user)
+
+    if request.method == "POST":
+        form = ProfileForm(request.POST, request.Files, instance=profile)
+        form.save()
+        return redirect("profile")
+    else:
+        form = ProfileForm(instance=profile)
+    return render(request, "edit_profile.html", {"form": form})
