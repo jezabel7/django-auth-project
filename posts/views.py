@@ -19,7 +19,7 @@ def signup(request):
         return redirect("home")
 
     if request.method == "GET":
-        return render(request, "signup.html", {"form": UserCreationForm})
+        return render(request, "signup.html")
     else:
         print(request.POST)
         try:
@@ -35,13 +35,13 @@ def signup(request):
                 return render(
                     request,
                     "signup.html",
-                    {"form": UserCreationForm, "error": "Las contraseñas no coinciden"},
+                    {"error": "Las contraseñas no coinciden"},
                 )
         except:
             return render(
                 request,
                 "signup.html",
-                {"form": UserCreationForm, "error": "El usuario ya existe"},
+                {"error": "El usuario ya existe"},
             )
 
 
