@@ -3,7 +3,7 @@
 <h2>{{ profile.user.username }}</h2>
 <p>{{ profile.biography }}</p>
 {% if profile.avatar %}
-<img src="{{ profile.avatar.url }}" alt="Avatar" />
+<img class="rounded float-lef" src="{{ profile.avatar.url }}" alt="Avatar" />
 {% else %}
 <p>No avatar uploaded.</p>
 {% endif %}
