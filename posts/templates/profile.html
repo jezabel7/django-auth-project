@@ -2,4 +2,9 @@
 <h1>Profile</h1>
 <h2>{{ profile.user.username }}</h2>
 <p>{{ profile.biography }}</p>
+{% if profile.avatar %}
+<img src="{{ profile.avatar.url }}" alt="Avatar" />
+{% else %}
+<p>No avatar uploaded.</p>
+{% endif %}
 <a href="/profile/edit">Edit profile</a> {% endblock "content" %}
