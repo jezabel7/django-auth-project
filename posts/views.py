@@ -24,11 +24,16 @@ def signup(request):
         print(request.POST)
         try:
             if request.POST["password1"] == request.POST["password2"]:
+
                 user = User.objects.create_user(
                     username=request.POST["username"],
                     password=request.POST["password1"],
                 )
                 user.save()
+
+                profile = Profile.objects.create(user=user)
+                profile.save()
+
                 login(request, user)
                 return redirect("home")
             else:
@@ -115,6 +120,7 @@ def create_task(request):
 def profile(request):
     user = request.user
     profile = get_object_or_404(Profile, user=user)
+
     return render(request, "profile.html", {"profile": profile})
 
 
