@@ -1,11 +1,86 @@
-{% extends "index.html" %} {% block "content" %}
-<h1>Este es el home</h1>
-<h2>Tareas creadas</h2>
-<a href="/tasks/create/">Crear nueva tarea</a>
-{% for task in tasks %}
-<div>
-  <h4>{{task.title}}</h4>
-  <p>{{task.description}} - {{task.user.username}}</p>
-  <em>{{task.created}}</em>
+{% extends "index.html" %}
+{% block "content" %}
+<div class="container my-4">
+  <div class="text-center mb-4">
+    <h1 class="display-4 font-weight-bold">Welcome to TecConnect</h1>
+    <a class="btn btn-primary mb-3" href="{% url 'create' %}">Create new post</a>
+  </div>
+
+  <div class="row">
+    {% for task in tasks %}
+    <div class="col-md-4 mb-4">
+      <div class="card">
+        <div class="card-body">
+          <h4 class="card-title">{{ task.title }}</h4>
+          <p class="card-text">{{ task.description }}</p>
+          <footer class="blockquote-footer">
+            {{ task.user.username }} <br>
+            <small class="text-muted">{{ task.created }}</small>
+          </footer>
+          <div>
+            <button class="btn btn-outline-primary like-btn" data-task-id="{{ task.id }}">
+              {% if request.user in task.liked_by.all %}
+                Unlike
+              {% else %}
+                Like
+              {% endif %}
+            </button>
+            <span id="like-count-{{ task.id }}">{{ task.total_likes }}</span> likes
+          </div>
+
+          <!-- Section for Comments -->
+          <h5 class="mt-4">Comments</h5>
+          <div id="comments-section-{{ task.id }}">
+            {% for comment in task.comments.all %}
+            <div class="comment mb-2">
+              <strong>{{ comment.user.username }}</strong> <small>{{ comment.created }}</small>
+              <p>{{ comment.content }}</p>
+            </div>
+            {% empty %}
+            <p>No comments yet.</p>
+            {% endfor %}
+          </div>
+
+          <!-- Comment Form -->
+          {% if user.is_authenticated %}
+          <form method="POST" action="{% url 'add_comment' task.id %}">
+            {% csrf_token %}
+            <div class="form-group mt-3">
+              <textarea class="form-control" name="content" rows="3" placeholder="Add a comment..."></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary mt-2">Add Comment</button>
+          </form>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+    {% empty %}
+    <p>No tasks available.</p>
+    {% endfor %}
+  </div>
 </div>
-{% endfor %} {% endblock "content" %}
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+$(document).ready(function() {
+    $('.like-btn').click(function() {
+        var btn = $(this);
+        var taskId = btn.data('task-id');
+        $.ajax({
+            url: '{% url "like_task" 0 %}'.replace('0', taskId),
+            method: 'POST',
+            headers: {'X-CSRFToken': '{{ csrf_token }}'},
+            success: function(data) {
+                if (data.liked) {
+                    btn.text('Unlike');
+                } else {
+                    btn.text('Like');
+                }
+                $('#like-count-' + taskId).text(data.total_likes);
+            }
+        });
+    });
+});
+</script>
+
+{% endblock "content" %}

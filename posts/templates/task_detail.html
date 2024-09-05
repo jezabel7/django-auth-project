@@ -1,0 +1,27 @@
+{% extends "index.html" %}
+
+{% block "content" %}
+<h1>{{ task.title }}</h1>
+<p>{{ task.description }}</p>
+
+<h3>Comments</h3>
+<div>
+    {% for comment in comments %}
+    <div class="mb-2">
+        <strong>{{ comment.user.username }}</strong> <small>{{ comment.created }}</small>
+        <p>{{ comment.content }}</p>
+    </div>
+    {% empty %}
+    <p>No comments yet.</p>
+    {% endfor %}
+</div>
+
+<h3>Add a Comment</h3>
+<form method="POST">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-primary">Add Comment</button>
+</form>
+
+<a href="{% url 'home' %}">Back to Home</a>
+{% endblock %}

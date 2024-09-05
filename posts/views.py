@@ -1,10 +1,11 @@
 from django.http import HttpResponse
+from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.models import User  # Utilizamos el modelo integrado User
 from django.contrib.auth import login, authenticate, logout
-from .models import Task, Profile
-from .forms import TaskForm, ProfileForm
+from .models import Task, Profile, Comment
+from .forms import TaskForm, ProfileForm, CommentForm
 
 
 # Create your views here.
@@ -120,8 +121,12 @@ def create_task(request):
 def profile(request):
     user = request.user
     profile = get_object_or_404(Profile, user=user)
+    tasks = Task.objects.filter(user=profile.user)
 
-    return render(request, "profile.html", {"profile": profile})
+    return render(request, "profile.html", {
+        "profile": profile,
+        "tasks": tasks
+        })
 
 
 def edit_profile(request):
@@ -135,3 +140,46 @@ def edit_profile(request):
     else:
         form = ProfileForm(instance=profile)
         return render(request, "edit_profile.html", {"form": form})
+
+def like_task(request, task_id):
+    task = get_object_or_404(Task, id=task_id)
+    if request.user in task.liked_by.all():
+        task.liked_by.remove(request.user)
+        liked = False
+    else:
+        task.liked_by.add(request.user)
+        liked = True
+
+    return JsonResponse({'liked': liked, 'total_likes': task.total_likes()})
+
+def task_detail(request, task_id):
+    task = get_object_or_404(Task, id=task_id)
+    comments = task.comments.all()
+
+    if request.method == "POST":
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            new_comment = form.save(commit=False)
+            new_comment.task = task
+            new_comment.user = request.user
+            new_comment.save()
+            return redirect('task_detail', task_id=task.id)
+    else:
+        form = CommentForm()
+
+    return render(request, 'task_detail.html', {
+        'task': task,
+        'comments': comments,
+        'form': form
+    })
+
+def add_comment(request, task_id):
+    if request.method == "POST":
+        task = get_object_or_404(Task, id=task_id)
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            new_comment = form.save(commit=False)
+            new_comment.task = task
+            new_comment.user = request.user
+            new_comment.save()
+    return redirect('home')

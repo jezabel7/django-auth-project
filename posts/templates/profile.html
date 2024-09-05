@@ -1,10 +1,33 @@
-{% extends "index.html" %} {% block "content" %}
-<h1>Profile</h1>
-<h2>{{ profile.user.username }}</h2>
-<p>{{ profile.biography }}</p>
-{% if profile.avatar %}
-<img class="rounded float-lef" src="{{ profile.avatar.url }}" alt="Avatar" />
-{% else %}
-<p>No avatar uploaded.</p>
-{% endif %}
-<a href="/profile/edit">Edit profile</a> {% endblock "content" %}
+{% extends "index.html" %}
+{% block "content" %}
+<div class="container my-4">
+  <div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+      <div class="card text-center shadow-lg p-4 mb-4 bg-light">
+        <h1 class="card-title mb-3">{{ profile.user.username }}</h1>
+        <p class="card-text mb-4">{{ profile.biography }}</p>
+        {% if profile.avatar %}
+          <div class="d-flex justify-content-center mb-4">
+            <img class="img-fluid rounded-circle" src="{{ profile.avatar.url }}" alt="Avatar" style="width: 150px; height: 150px;" />
+          </div>
+        {% else %}
+          <p class="mb-4">No avatar uploaded.</p>
+        {% endif %}  
+        <a href="/profile/edit" class="btn btn-primary mt-4">Edit profile</a>
+      </div>
+      <h3 class="mb-3">Your Posts:</h3>
+      {% if tasks %}
+        <ul class="list-group list-group-flush">
+          {% for task in tasks %}
+            <li class="list-group-item">
+              <strong>{{ task.title }}</strong> - {{ task.description }}
+            </li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <p class="text-center">No tasks available.</p>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock "content" %}

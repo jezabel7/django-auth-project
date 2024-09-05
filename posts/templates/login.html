@@ -1,9 +1,35 @@
-{% extends "index.html" %} {% block "content" %}
-<h1>Login page</h1>
-{{error}}
-<form action="{% url "login" %}" method="POST">
-  {% csrf_token %}
-  {{form}}
-  <button type="submit">Iniciar sesión</button>
-</form>
+{% extends "index.html" %}
+{% block "content" %}
+<div class="container my-5">
+  <div class="row justify-content-center">
+    <div class="col-md-6 col-lg-4">
+      <div class="card shadow-lg p-4 mb-4 bg-light">
+        <h1 class="card-title text-center mb-4" style="font-family: 'Times New Roman', Times, serif; font-weight: bold; font-style: italic;">TecConnect</h1>
+
+        {% if error %}
+          <div class="alert alert-danger" role="alert">
+            {{ error }}
+          </div>
+        {% endif %}
+
+        <form action="{% url 'login' %}" method="POST" class="d-flex flex-column align-items-center">
+          {% csrf_token %}
+          <div class="form-group mb-3 w-100">
+            <label for="username" class="form-label">Username</label>
+            <input class="form-control" type="text" id="username" name="username" placeholder="Write your username" required />
+          </div>
+          <div class="form-group mb-3 w-100">
+            <label for="password" class="form-label">Password</label>
+            <input class="form-control" type="password" id="password" name="password" placeholder="*******" required />
+          </div>
+          <button type="submit" class="btn btn-primary">Log In</button>
+        </form>
+
+        <div class="mt-4 text-center">
+          <p>Don't have an account? <a href="{% url 'signup' %}" class="btn btn-link">Register</a></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 {% endblock "content" %}

@@ -1,6 +1,6 @@
 from django import forms
 from django.forms import ModelForm
-from .models import Task, Profile
+from .models import Task, Profile, Comment 
 
 
 class TaskForm(ModelForm):
@@ -22,3 +22,8 @@ class ProfileForm(ModelForm):
             "biography": forms.Textarea(attrs={"class": "form-control bg-primary"}),
             "avatar": forms.ClearableFileInput(attrs={"class": "form-control-file"}),
         }
+
+class CommentForm(ModelForm):
+    class Meta:
+        model=Comment
+        fields=["content"] 
