@@ -1,0 +1,10 @@
+{% extends "index.html" %}
+
+{% block content %}
+<h2>Edita tu comentario</h2>
+<form method="POST">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-primary">Guardar cambios</button>
+</form>
+{% endblock %}

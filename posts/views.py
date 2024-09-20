@@ -6,6 +6,8 @@ from django.contrib.auth.models import User  # Utilizamos el modelo integrado Us
 from django.contrib.auth import login, authenticate, logout
 from .models import Task, Profile, Comment
 from .forms import TaskForm, ProfileForm, CommentForm
+from django.contrib.auth.decorators import login_required
+from django.template.loader import render_to_string
 
 
 # Create your views here.
@@ -123,10 +125,7 @@ def profile(request):
     profile = get_object_or_404(Profile, user=user)
     tasks = Task.objects.filter(user=profile.user)
 
-    return render(request, "profile.html", {
-        "profile": profile,
-        "tasks": tasks
-        })
+    return render(request, "profile.html", {"profile": profile, "tasks": tasks})
 
 
 def edit_profile(request):
@@ -141,6 +140,7 @@ def edit_profile(request):
         form = ProfileForm(instance=profile)
         return render(request, "edit_profile.html", {"form": form})
 
+
 def like_task(request, task_id):
     task = get_object_or_404(Task, id=task_id)
     if request.user in task.liked_by.all():
@@ -150,7 +150,8 @@ def like_task(request, task_id):
         task.liked_by.add(request.user)
         liked = True
 
-    return JsonResponse({'liked': liked, 'total_likes': task.total_likes()})
+    return JsonResponse({"liked": liked, "total_likes": task.total_likes()})
+
 
 def task_detail(request, task_id):
     task = get_object_or_404(Task, id=task_id)
@@ -163,15 +164,14 @@ def task_detail(request, task_id):
             new_comment.task = task
             new_comment.user = request.user
             new_comment.save()
-            return redirect('task_detail', task_id=task.id)
+            return redirect("task_detail", task_id=task.id)
     else:
         form = CommentForm()
 
-    return render(request, 'task_detail.html', {
-        'task': task,
-        'comments': comments,
-        'form': form
-    })
+    return render(
+        request, "task_detail.html", {"task": task, "comments": comments, "form": form}
+    )
+
 
 def add_comment(request, task_id):
     if request.method == "POST":
@@ -182,4 +182,23 @@ def add_comment(request, task_id):
             new_comment.task = task
             new_comment.user = request.user
             new_comment.save()
-    return redirect('home')
+    return redirect("home")
+
+
+def edit_comment(request, comment_id):
+    comment = get_object_or_404(Comment, id=comment_id)
+    if request.method == "GET":
+        form = CommentForm(instance=comment)
+        return render(
+            request, "edit_comment_form.html", {"form": form, "comment": comment}
+        )
+    elif request.method == "POST":
+        form = CommentForm(request.POST, instance=comment)
+        if form.is_valid():
+            form.save()
+            return JsonResponse(
+                {"success": True, "content": comment.content}
+            )  # Enviar contenido actualizado
+        return JsonResponse({"success": False, "errors": form.errors})
+    if form.is_valid():
+        comment = form.save()

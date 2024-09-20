@@ -1,0 +1,5 @@
+<form method="POST" id="editCommentForm" action="{% url 'edit_comment' comment.id %}">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-primary">Guardar cambios</button>
+</form>

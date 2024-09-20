@@ -28,18 +28,22 @@
             <span id="like-count-{{ task.id }}">{{ task.total_likes }}</span> likes
           </div>
 
-          <!-- Section for Comments -->
-          <h5 class="mt-4">Comments</h5>
-          <div id="comments-section-{{ task.id }}">
-            {% for comment in task.comments.all %}
-            <div class="comment mb-2">
-              <strong>{{ comment.user.username }}</strong> <small>{{ comment.created }}</small>
-              <p>{{ comment.content }}</p>
-            </div>
-            {% empty %}
-            <p>No comments yet.</p>
-            {% endfor %}
-          </div>
+<!-- Section for Comments -->
+<h5 class="mt-4">Comments</h5>
+<div id="comments-section-{{ task.id }}">
+    {% for comment in task.comments.all %}
+    <div class="comment mb-2" id="comment-{{ comment.id }}">
+        <strong>{{ comment.user.username }}</strong>
+        <small>{{ comment.created }}</small>
+        <p>{{ comment.content }}</p>
+        {% if comment.user == request.user %}
+        <a href="{% url 'edit_comment' comment.id %}" class="btn btn-sm btn-warning edit-comment-btn">Editar</a>
+        {% endif %}
+    </div>
+    {% empty %}
+    <p>No comments yet.</p>
+    {% endfor %}
+</div>
 
           <!-- Comment Form -->
           {% if user.is_authenticated %}
@@ -59,6 +63,7 @@
     {% endfor %}
   </div>
 </div>
+
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
@@ -80,7 +85,13 @@ $(document).ready(function() {
             }
         });
     });
+
+
 });
+
+
 </script>
+
+
 
 {% endblock "content" %}
