@@ -3,3 +3,33 @@ body {
   padding: 0;
   box-sizing: border-box;
 }
+/* Modo oscuro para el navbar */
+.navbar-dark-custom {
+  background-color: #212529 !important; /* Un tono más oscuro */
+  color: white !important;
+}
+
+.navbar-light-custom {
+  background-color: #f8f9fa !important; /* Color claro */
+  color: black !important;
+}
+
+/* Estilos personalizados para los card-body */
+.card-body-dark {
+  background-color: #343a40; /* Fondo oscuro */
+  color: white;
+}
+
+.card-body-light {
+  background-color: #f8f9fa; /* Fondo claro */
+  color: black;
+}
+
+.comments-section {
+  margin-top: 20px;
+}
+
+.toggle-comments-btn {
+  text-decoration: underline;
+  cursor: pointer;
+}

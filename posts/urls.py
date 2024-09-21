@@ -15,4 +15,5 @@ urlpatterns = [
     path("task/<int:task_id>/", views.task_detail, name="task_detail"),
     path("task/<int:task_id>/add_comment/", views.add_comment, name="add_comment"),
     path("edit_comment/<int:comment_id>/", views.edit_comment, name="edit_comment"),
+    path("profile/<str:username>/", views.user_profile, name="user_profile"),
 ]

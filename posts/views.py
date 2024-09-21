@@ -187,18 +187,31 @@ def add_comment(request, task_id):
 
 def edit_comment(request, comment_id):
     comment = get_object_or_404(Comment, id=comment_id)
+
     if request.method == "GET":
         form = CommentForm(instance=comment)
         return render(
             request, "edit_comment_form.html", {"form": form, "comment": comment}
         )
+
     elif request.method == "POST":
         form = CommentForm(request.POST, instance=comment)
         if form.is_valid():
             form.save()
-            return JsonResponse(
-                {"success": True, "content": comment.content}
-            )  # Enviar contenido actualizado
-        return JsonResponse({"success": False, "errors": form.errors})
-    if form.is_valid():
-        comment = form.save()
+            # Redirigir al home después de guardar los cambios
+            return redirect(
+                "home"
+            )  # Reemplaza 'home' con el nombre de la URL que apunta al home
+
+    return render(request, "edit_comment_form.html", {"form": form, "comment": comment})
+
+
+def user_profile(request, username):
+    # Obtener el usuario cuyo perfil queremos ver
+    user = get_object_or_404(User, username=username)
+    # Obtener el perfil asociado al usuario
+    profile = get_object_or_404(Profile, user=user)
+    # Obtener las tareas del usuario
+    tasks = Task.objects.filter(user=user)
+
+    return render(request, "user_profile.html", {"profile": profile, "tasks": tasks})

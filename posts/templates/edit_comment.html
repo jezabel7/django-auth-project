@@ -1,10 +1,16 @@
 {% extends "index.html" %}
 
 {% block content %}
-<h2>Edita tu comentario</h2>
-<form method="POST">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit" class="btn btn-primary">Guardar cambios</button>
-</form>
+<div class="container my-5">
+    <h2 class="mb-4">Edita tu comentario</h2>
+    <form method="POST" class="border p-4 shadow-sm rounded bg-light">
+        {% csrf_token %}
+        <div class="form-group">
+            {{ form.content.label_tag }}
+            {{ form.content|add_class:"form-control" }}
+        </div>
+        <button type="submit" class="btn btn-primary mt-3">Guardar cambios</button>
+        <a href="{% url 'task_detail' task.id %}" class="btn btn-secondary mt-3">Cancelar</a>
+    </form>
+</div>
 {% endblock %}

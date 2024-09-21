@@ -1,0 +1,23 @@
+{% extends "index.html" %}
+
+{% block "content" %}
+<div class="container my-4">
+    <h1>Perfil de {{ profile.user.username }}</h1>
+
+    <h2>Biografía</h2>
+    <p>{{ profile.biography }}</p>
+
+    <h3>Tareas de {{ profile.user.username }}</h3>
+    <ul class="list-group">
+        {% for task in tasks %}
+        <li class="list-group-item">
+            <strong>{{ task.title }}</strong> - {{ task.description }}
+        </li>
+        {% empty %}
+        <li class="list-group-item">No hay tareas disponibles.</li>
+        {% endfor %}
+    </ul>
+
+    <a href="{% url 'home' %}">Regresar al inicio</a>
+</div>
+{% endblock %}

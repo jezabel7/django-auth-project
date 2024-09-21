@@ -8,13 +8,18 @@
 <div>
     {% for comment in comments %}
     <div class="mb-2">
-        <strong>{{ comment.user.username }}</strong> <small>{{ comment.created }}</small>
+        <strong>
+            <a href="{% url 'user_profile' comment.user.username %}">
+                {{ comment.user.username }}
+            </a>
+        </strong> <small>{{ comment.created }}</small>
         <p>{{ comment.content }}</p>
     </div>
     {% empty %}
     <p>No comments yet.</p>
     {% endfor %}
 </div>
+
 
 <h3>Add a Comment</h3>
 <form method="POST">
